@@ -195,7 +195,7 @@ class _RegistreScreenState extends State<RegistreScreen> {
                                 horizontal: 100, vertical: 5),
                             textStyle: TextStyle(
                                 fontSize: 20, fontWeight: FontWeight.bold)),
-                        child: Text("S'inscrire'"),
+                        child: Text("S'inscrire!'"),
                       ),
                       SizedBox(
                         height: 10,
