@@ -11,16 +11,11 @@ import 'package:mycompany/model/user_model.dart';
 import 'home_screen.dart';
 import 'login_screen.dart';
 
-class RegistreScreen extends StatefulWidget {
-  const RegistreScreen({Key? key}) : super(key: key);
+class RegistreScreen extends StatelessWidget {
+  RegistreScreen({Key? key}) : super(key: key);
 
-  @override
-  State<RegistreScreen> createState() => _RegistreScreenState();
-}
-
-class _RegistreScreenState extends State<RegistreScreen> {
   final _formkey = GlobalKey<FormState>();
-  bool _obscuretext = true;
+  var ispwdhidden = true.obs;
   final firstnameEC = TextEditingController();
   final lastnameEC = TextEditingController();
   final numberEC = TextEditingController();
@@ -32,6 +27,8 @@ class _RegistreScreenState extends State<RegistreScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double width_var = MediaQuery.of(context).size.width;
+    double height_var = MediaQuery.of(context).size.height;
     return MaterialApp(
       home: SafeArea(
         child: Scaffold(
@@ -42,24 +39,26 @@ class _RegistreScreenState extends State<RegistreScreen> {
             child: Form(
               key: _formkey,
               child: Padding(
-                padding: const EdgeInsets.all(20.0),
+                padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
                 child: SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: <Widget>[
+                      SizedBox(
+                        height: height_var * 0.1,
+                      ),
                       Text(
-                        "MY COMPANY SIGN UP",
+                        "MY COMPANY ",
                         style: TextStyle(
                           fontSize: 30,
                           color: Colors.white,
+                          fontFamily: 'LittlePat',
                         ),
                         textAlign: TextAlign.center,
                       ),
-                      SizedBox(
-                        height: 50,
-                      ),
+                      SizedBox(height: height_var * 0.1),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         // ignore: prefer_const_literals_to_create_immutables
@@ -67,7 +66,7 @@ class _RegistreScreenState extends State<RegistreScreen> {
                           Text(
                             "Crée votre Compte",
                             style: TextStyle(
-                              color: Colors.lightBlue,
+                              color: Colors.white,
                               fontWeight: FontWeight.bold,
                               fontSize: 30,
                             ),
@@ -77,10 +76,21 @@ class _RegistreScreenState extends State<RegistreScreen> {
                       Row(
                         children: [
                           SizedBox(
-                            width: 175,
+                            width: width_var * 0.46,
                             child: TextFormField(
+                              validator: (value) {
+                                RegExp regex = new RegExp(r'[A-Za-z]');
+                                if (value!.isEmpty) {
+                                  return ("Veuillez saisir un Nom");
+                                }
+                                if (!regex.hasMatch(value)) {
+                                  return ("Veuillez saisir un Nom  valide");
+                                }
+                              },
                               controller: lastnameEC,
                               decoration: InputDecoration(
+                                filled: true,
+                                fillColor: Colors.white,
                                 prefixIcon: Icon(Icons.person),
                                 border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(10),
@@ -91,10 +101,21 @@ class _RegistreScreenState extends State<RegistreScreen> {
                             ),
                           ),
                           SizedBox(
-                            width: 175,
+                            width: width_var * 0.46,
                             child: TextFormField(
+                              validator: (value) {
+                                RegExp regex = new RegExp(r'[A-Za-z]');
+                                if (value!.isEmpty) {
+                                  return ("Veuillez saisir un Prenom");
+                                }
+                                if (!regex.hasMatch(value)) {
+                                  return ("Veuillez saisir un Prenom valide");
+                                }
+                              },
                               controller: firstnameEC,
                               decoration: InputDecoration(
+                                filled: true,
+                                fillColor: Colors.white,
                                 prefixIcon: Icon(Icons.person),
                                 border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(10),
@@ -106,9 +127,23 @@ class _RegistreScreenState extends State<RegistreScreen> {
                           ),
                         ],
                       ),
+                      SizedBox(
+                        height: height_var * 0.01,
+                      ),
                       TextFormField(
+                        validator: (value) {
+                          RegExp regex = new RegExp(r'^[0-9]{10}$');
+                          if (value!.isEmpty) {
+                            return ("Veuillez saisir yn numéro");
+                          }
+                          if (!regex.hasMatch(value)) {
+                            return ("Veuillez saisir un numéro valide(10.Chara)");
+                          }
+                        },
                         controller: numberEC,
                         decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Colors.white,
                           prefixIcon: Icon(Icons.phone),
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
@@ -118,11 +153,23 @@ class _RegistreScreenState extends State<RegistreScreen> {
                         ),
                       ),
                       SizedBox(
-                        height: 10,
+                        height: height_var * 0.01,
                       ),
                       TextFormField(
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return ("Veuillez saisir votre email!");
+                          }
+                          if (!RegExp("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[a-z]")
+                              .hasMatch(value)) {
+                            return ("Veuillez saisir un email valide!");
+                          }
+                          return null;
+                        },
                         controller: mailEC,
                         decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Colors.white,
                           prefixIcon: Icon(Icons.email),
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
@@ -132,58 +179,85 @@ class _RegistreScreenState extends State<RegistreScreen> {
                         ),
                       ),
                       SizedBox(
-                        height: 15,
+                        height: height_var * 0.01,
                       ),
-                      TextFormField(
-                        controller: password1EC,
-                        decoration: InputDecoration(
-                          prefixIcon: Icon(Icons.key),
-                          suffixIcon: GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  _obscuretext = !_obscuretext;
-                                });
-                              },
-                              child: Icon(_obscuretext
+                      Obx(
+                        () => TextFormField(
+                          validator: (value) {
+                            RegExp regex = new RegExp(r'^.{6,}$');
+                            if (value!.isEmpty) {
+                              return ("Veuillez saisir votre mot de passe");
+                            }
+                            if (!regex.hasMatch(value)) {
+                              return ("Veuillez saisir un mot de passe valide(6.Chara Minimum)");
+                            }
+                          },
+                          controller: password1EC,
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: Colors.white,
+                            prefixIcon: Icon(Icons.key),
+                            suffix: InkWell(
+                              child: Icon(ispwdhidden.value
                                   ? Icons.visibility
-                                  : Icons.visibility_off)),
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide(
-                                  color: Colors.lightBlue, width: 1)),
-                          hintText: "Mot de passe*",
+                                  : Icons.visibility_off),
+                              onTap: () {
+                                ispwdhidden.value = !ispwdhidden.value;
+                              },
+                            ),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide(
+                                    color: Colors.lightBlue, width: 1)),
+                            hintText: "Mot de passe*",
+                          ),
+                          obscureText: ispwdhidden.value,
                         ),
-                        obscureText: _obscuretext,
                       ),
                       SizedBox(
-                        height: 15,
+                        height: height_var * 0.01,
                       ),
-                      TextFormField(
-                        controller: password2EC,
-                        decoration: InputDecoration(
-                          prefixIcon: Icon(Icons.key),
-                          suffixIcon: GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  _obscuretext = !_obscuretext;
-                                });
-                              },
-                              child: Icon(_obscuretext
+                      Obx(
+                        () => TextFormField(
+                          validator: (value) {
+                            RegExp regex = new RegExp(r'^.{6,}$');
+                            if (value!.isEmpty) {
+                              return ("Veuillez saisir votre mot de passe");
+                            }
+                            if (!regex.hasMatch(value)) {
+                              return ("Veuillez saisir un mot de passe valide(6.Chara Minimum)");
+                            }
+                            if (value != password1EC.text) {
+                              return ("Mot de passe différent ");
+                            }
+                          },
+                          controller: password2EC,
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: Colors.white,
+                            prefixIcon: Icon(Icons.key),
+                            suffix: InkWell(
+                              child: Icon(ispwdhidden.value
                                   ? Icons.visibility
-                                  : Icons.visibility_off)),
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide(
-                                  color: Colors.lightBlue, width: 1)),
-                          hintText: "Comfirmer votre Mot de passe*",
+                                  : Icons.visibility_off),
+                              onTap: () {
+                                ispwdhidden.value = !ispwdhidden.value;
+                              },
+                            ),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide(
+                                    color: Colors.lightBlue, width: 1)),
+                            hintText: "Comfirmer votre Mot de passe*",
+                          ),
+                          obscureText: ispwdhidden.value,
                         ),
-                        obscureText: _obscuretext,
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                       ),
                       SizedBox(
-                        height: 30,
+                        height: height_var * 0.07,
                       ),
                       ElevatedButton(
                         onPressed: () {
@@ -192,13 +266,14 @@ class _RegistreScreenState extends State<RegistreScreen> {
                         style: ElevatedButton.styleFrom(
                             primary: Colors.lightBlue,
                             padding: EdgeInsets.symmetric(
-                                horizontal: 100, vertical: 5),
+                                horizontal: width_var * 0.33,
+                                vertical: height_var * 0.01),
                             textStyle: TextStyle(
                                 fontSize: 20, fontWeight: FontWeight.bold)),
                         child: Text("S'inscrire!'"),
                       ),
                       SizedBox(
-                        height: 10,
+                        height: height_var * 0.01,
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -237,74 +312,8 @@ class _RegistreScreenState extends State<RegistreScreen> {
     );
   }
 
-  // Future _signup(String email, String password) async {
-  //   try {
-  //     await _auth
-  //         .createUserWithEmailAndPassword(email: email, password: password)
-  //         .then((value) async => {
-  //               () async {
-  //                 // calling our firestore
-  //                 // calling our user model
-  //                 // sedning these values
-
-  //                 FirebaseFirestore firebaseFirestore =
-  //                     FirebaseFirestore.instance;
-  //                 User? user = _auth.currentUser;
-
-  //                 UserModel userModel = UserModel();
-
-  //                 // writing all the values
-  //                 userModel.email = user!.email;
-  //                 userModel.uid = user.uid;
-  //                 userModel.firstname = firstnameEC.text;
-  //                 userModel.lastname = lastnameEC.text;
-  //                 userModel.number = numberEC.text;
-
-  //                 await firebaseFirestore
-  //                     .collection("users")
-  //                     .doc(user.uid)
-  //                     .set(userModel.toMap());
-  //                 Fluttertoast.showToast(
-  //                     msg: "Account created successfully :) ");
-
-  //                 Navigator.pushAndRemoveUntil(
-  //                     (context),
-  //                     MaterialPageRoute(builder: (context) => HomeScreen()),
-  //                     (route) => false);
-  //               }()
-  //             })
-  //         .catchError((e) {
-  //       Fluttertoast.showToast(msg: e!.message);
-  //     });
-  //   } on FirebaseAuthException catch (error) {
-  //     switch (error.code) {
-  //       case "invalid-email":
-  //         errorMessage = "Your email address appears to be malformed.";
-  //         break;
-  //       case "wrong-password":
-  //         errorMessage = "Your password is wrong.";
-  //         break;
-  //       case "user-not-found":
-  //         errorMessage = "User with this email doesn't exist.";
-  //         break;
-  //       case "user-disabled":
-  //         errorMessage = "User with this email has been disabled.";
-  //         break;
-  //       case "too-many-requests":
-  //         errorMessage = "Too many requests";
-  //         break;
-  //       case "operation-not-allowed":
-  //         errorMessage = "Signing in with Email and Password is not enabled.";
-  //         break;
-  //       default:
-  //         errorMessage = "An undefined Error happened.";
-  //     }
-  //     Fluttertoast.showToast(msg: errorMessage!);
-  //     print(error.code);
-  //   }
-  // }
   Future _signup(String email, String password) async {
-    try {
+    if (_formkey.currentState!.validate()) {
       final User? user = (await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
@@ -312,8 +321,6 @@ class _RegistreScreenState extends State<RegistreScreen> {
           .user;
 
       FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
-      //User? user = _auth.currentUser;
-
       UserModel userModel = UserModel();
 
       // writing all the values
@@ -330,18 +337,7 @@ class _RegistreScreenState extends State<RegistreScreen> {
           .set(userModel.toMap());
       Fluttertoast.showToast(msg: "Account created successfully :) ");
 
-      Navigator.pushAndRemoveUntil(
-          (context),
-          MaterialPageRoute(builder: (context) => HomeScreen()),
-          (route) => false);
-    } on FirebaseAuthException catch (error) {
-      switch (error.code) {
-        //some cases
-        default:
-          errorMessage = "An undefined Error happened.";
-      }
-      Fluttertoast.showToast(msg: errorMessage!);
-      print(error.code);
+      Get.off(HomeScreen());
     }
   }
 }

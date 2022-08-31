@@ -1,7 +1,5 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'dart:math';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -9,23 +7,19 @@ import 'package:get/get.dart';
 import 'package:mycompany/screens/home_screen.dart';
 import 'package:mycompany/screens/registre_screen.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+class LoginScreen extends StatelessWidget {
+  LoginScreen({Key? key}) : super(key: key);
 
   @override
-  _LoginScreenState createState() => _LoginScreenState();
-}
-
-class _LoginScreenState extends State<LoginScreen> {
-  bool _obscuretext = true;
+  var ispwdhidden = true.obs;
   final _formkey = GlobalKey<FormState>();
-
+  final _auth = FirebaseAuth.instance;
   final TextEditingController emailController = TextEditingController();
   final TextEditingController PasswordController = TextEditingController();
-  //firebase
-  final _auth = FirebaseAuth.instance;
-  @override
+
   Widget build(BuildContext context) {
+    double width_var = MediaQuery.of(context).size.width;
+    double height_var = MediaQuery.of(context).size.height;
     return MaterialApp(
       home: SafeArea(
         child: Scaffold(
@@ -36,23 +30,27 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Form(
               key: _formkey,
               child: Padding(
-                padding: const EdgeInsets.all(20.0),
+                padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
                 child: SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: <Widget>[
+                      SizedBox(
+                        height: height_var * 0.1,
+                      ),
                       Text(
-                        "MY COMPAsNY",
+                        "MY COMPANY",
                         style: TextStyle(
                           fontSize: 30,
                           color: Colors.white,
+                          fontFamily: 'LittlePat',
                         ),
                         textAlign: TextAlign.center,
                       ),
                       SizedBox(
-                        height: 150,
+                        height: height_var * 0.2,
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -61,7 +59,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           Text(
                             "Connectez-vous",
                             style: TextStyle(
-                              color: Colors.lightBlue,
+                              color: Colors.white,
                               fontWeight: FontWeight.bold,
                               fontSize: 30,
                             ),
@@ -69,7 +67,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ],
                       ),
                       SizedBox(
-                        height: 25,
+                        height: height_var * 0.01,
                       ),
                       TextFormField(
                         validator: (value) {
@@ -84,6 +82,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         },
                         controller: emailController,
                         decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Colors.white,
                           prefixIcon: Icon(Icons.email),
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
@@ -93,37 +93,40 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                       SizedBox(
-                        height: 15,
+                        height: height_var * 0.02,
                       ),
-                      TextFormField(
-                        validator: (value) {
-                          RegExp regex = new RegExp(r'^.{6,}$');
-                          if (value!.isEmpty) {
-                            return ("Veuillez saisir votre mot de passe");
-                          }
-                          if (!regex.hasMatch(value)) {
-                            return ("Veuillez saisir un mot de passe valide(6.Chara Minimum)");
-                          }
-                        },
-                        controller: PasswordController,
-                        decoration: InputDecoration(
-                          prefixIcon: Icon(Icons.key),
-                          suffixIcon: GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  _obscuretext = !_obscuretext;
-                                });
-                              },
-                              child: Icon(_obscuretext
+                      Obx(
+                        () => TextFormField(
+                          validator: (value) {
+                            RegExp regex = new RegExp(r'^.{6,}$');
+                            if (value!.isEmpty) {
+                              return ("Veuillez saisir votre mot de passe");
+                            }
+                            if (!regex.hasMatch(value)) {
+                              return ("Veuillez saisir un mot de passe valide(6.Chara Minimum)");
+                            }
+                          },
+                          controller: PasswordController,
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: Colors.white,
+                            prefixIcon: Icon(Icons.key),
+                            suffix: InkWell(
+                              child: Icon(ispwdhidden.value
                                   ? Icons.visibility
-                                  : Icons.visibility_off)),
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide(
-                                  color: Colors.lightBlue, width: 1)),
-                          hintText: "Mot de passe*",
+                                  : Icons.visibility_off),
+                              onTap: () {
+                                ispwdhidden.value = !ispwdhidden.value;
+                              },
+                            ),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide(
+                                    color: Colors.lightBlue, width: 1)),
+                            hintText: "Mot de passe*",
+                          ),
+                          obscureText: ispwdhidden.value,
                         ),
-                        obscureText: _obscuretext,
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
@@ -141,7 +144,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ],
                       ),
                       SizedBox(
-                        height: 30,
+                        height: height_var * 0.05,
                       ),
                       ElevatedButton(
                         child: Text("SE CONNECTER"),
@@ -151,12 +154,13 @@ class _LoginScreenState extends State<LoginScreen> {
                         style: ElevatedButton.styleFrom(
                             primary: Colors.lightBlue,
                             padding: EdgeInsets.symmetric(
-                                horizontal: 100, vertical: 5),
+                                horizontal: width_var * 0.25,
+                                vertical: height_var * 0.01),
                             textStyle: TextStyle(
                                 fontSize: 20, fontWeight: FontWeight.bold)),
                       ),
                       SizedBox(
-                        height: 100,
+                        height: height_var * 0.16,
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -201,7 +205,7 @@ class _LoginScreenState extends State<LoginScreen> {
           .signInWithEmailAndPassword(email: email, password: password)
           .then((uid) => {
                 Fluttertoast.showToast(msg: "Connexion réussie!"),
-                Get.to(HomeScreen()),
+                //Get.to(HomeScreen()),
               })
           .catchError((e) {
         Fluttertoast.showToast(msg: e!.message);
