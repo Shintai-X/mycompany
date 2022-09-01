@@ -205,7 +205,7 @@ class LoginScreen extends StatelessWidget {
           .signInWithEmailAndPassword(email: email, password: password)
           .then((uid) => {
                 Fluttertoast.showToast(msg: "Connexion réussie!"),
-                //Get.to(HomeScreen()),
+                Get.to(HomeScreen()),
               })
           .catchError((e) {
         Fluttertoast.showToast(msg: e!.message);
