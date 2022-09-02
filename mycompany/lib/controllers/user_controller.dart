@@ -6,7 +6,11 @@ import 'package:mycompany/model/user_model.dart';
 class UserController extends GetxController {
   User? user = FirebaseAuth.instance.currentUser;
   UserModel loggedInUser = UserModel();
-  String name = '';
+  String? name;
+  String? lname;
+  String? number;
+  String? email;
+
   @override
   void onInit() async {
     await FirebaseFirestore.instance
@@ -15,8 +19,16 @@ class UserController extends GetxController {
         .get()
         .then((value) {
       this.loggedInUser = UserModel.fromMap(value.data());
-      //print('this is the logged in user ${this.loggedInUser.firstname}');
+      print("haaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+      print(this.loggedInUser.firstname);
+      print(this.loggedInUser.lastname);
+      print(this.loggedInUser.email);
+      print(this.loggedInUser.number);
+      print("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBB");
       name = this.loggedInUser.firstname!;
+      lname = this.loggedInUser.lastname!;
+      number = this.loggedInUser.number!;
+      email = this.loggedInUser.email!;
       update();
     });
     super.onInit();

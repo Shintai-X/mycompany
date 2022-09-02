@@ -28,8 +28,12 @@ class UserModel {
       'uid': uid,
       'email': email,
       'firstname': firstname,
-      'secondname': lastname,
+      'lastname': lastname,
       'number': number,
     };
+  }
+
+  void pr() {
+    print('${this.uid}+${this.email}+${this.lastname}+${this.number}');
   }
 }

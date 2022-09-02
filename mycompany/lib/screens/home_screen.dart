@@ -16,10 +16,9 @@ class HomeScreen extends StatelessWidget {
   @override
   User? user = FirebaseAuth.instance.currentUser;
   UserModel loggedInUser = UserModel();
-  //final usontrol = Get.find<UserController>();
+  //final ccontroller = Get.find<UserController>();
   UserController controller = Get.put(UserController());
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-
   @override
   Widget build(BuildContext context) {
     var height_var = MediaQuery.of(context).size.height;
