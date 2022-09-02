@@ -127,6 +127,7 @@ class HomeScreen extends StatelessWidget {
 
   Future<void> _signOut() async {
     await FirebaseAuth.instance.signOut();
-    controller.dispose();
+    Get.offAll(LoginScreen());
+    // controller.dispose();
   }
 }

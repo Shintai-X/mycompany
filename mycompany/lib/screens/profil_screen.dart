@@ -1,5 +1,8 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -8,13 +11,15 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:mycompany/controllers/user_controller.dart';
 import 'package:mycompany/model/user_model.dart';
+import 'package:image_picker/image_picker.dart';
 
 import 'home_screen.dart';
 import 'login_screen.dart';
 
 class ProfilScreen extends StatelessWidget {
   ProfilScreen({Key? key}) : super(key: key);
-
+  File? pickedFile;
+  ImagePicker imagePicker = ImagePicker();
   final _formkey = GlobalKey<FormState>();
   var ispwdhidden = true.obs;
   final firstnameEC = TextEditingController();
@@ -75,25 +80,26 @@ class ProfilScreen extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(16.0),
                                   image: DecorationImage(
                                     fit: BoxFit.cover,
-                                    image: AssetImage("assets/noir.jpg"),
+                                    image: FileImage(File(controller.img!)),
                                   ),
                                 ),
                               ),
+                              //Text("This is the path ${controller.img}"),
                               Positioned(
                                 bottom: 0,
                                 right: 0,
-                                child: Container(
-                                  height: height_var * 0.03,
-                                  width: width_var * 0.03,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    border: Border.all(
-                                      width: width_var * 0.025,
-                                    ),
+                                child: InkWell(
+                                  child: Icon(
+                                    Icons.camera,
                                     color: Colors.blue,
                                   ),
-                                  child: Icon(Icons.camera_alt_outlined,
-                                      color: Colors.blue),
+                                  onTap: () {
+                                    print("camera clicked");
+                                    showModalBottomSheet(
+                                        context: context,
+                                        builder: (context) =>
+                                            bottomSheet(context));
+                                  },
                                 ),
                               ),
                             ],
@@ -161,7 +167,7 @@ class ProfilScreen extends StatelessWidget {
                                         borderRadius: BorderRadius.circular(10),
                                         borderSide: BorderSide(
                                             color: Colors.blue, width: 1)),
-                                    hintText: "${controller.name}",
+                                    // hintText: "${controller.name}",
                                   ),
                                 ),
                               ),
@@ -171,16 +177,16 @@ class ProfilScreen extends StatelessWidget {
                             height: height_var * 0.01,
                           ),
                           TextFormField(
-                            validator: (value) {
-                              RegExp regex = new RegExp(
-                                  r'^(0[1-9]|1[0-9]|2[0-9]|3[01])-/.-/.$');
-                              if (value!.isEmpty) {
-                                return ("Veuillez saisir une Date de naissance");
-                              }
-                              if (!regex.hasMatch(value)) {
-                                return ("Veuillez saisir une date de naissance valide(dd/mm/yy)");
-                              }
-                            },
+                            // validator: (value) {
+                            //   RegExp regex = new RegExp(
+                            //       r'^(0[1-9]|1[0-9]|2[0-9]|3[01])-/.-/.$');
+                            //   if (value!.isEmpty) {
+                            //     return ("Veuillez saisir une Date de naissance");
+                            //   }
+                            //   if (!regex.hasMatch(value)) {
+                            //     return ("Veuillez saisir une date de naissance valide(dd/mm/yy)");
+                            //   }
+                            // },
                             controller: TextEditingController(
                               text: "${controller.date}",
                             ),
@@ -196,7 +202,7 @@ class ProfilScreen extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(10),
                                   borderSide:
                                       BorderSide(color: Colors.blue, width: 1)),
-                              hintText: "Date de Naissance*",
+                              //    hintText: "Date de Naissance*",
                             ),
                           ),
                           SizedBox(
@@ -256,7 +262,7 @@ class ProfilScreen extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(10),
                                   borderSide:
                                       BorderSide(color: Colors.blue, width: 1)),
-                              hintText: "${controller.number}",
+                              // hintText: "${controller.number}",
                             ),
                           ),
                           SizedBox(
@@ -282,7 +288,7 @@ class ProfilScreen extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(10),
                                   borderSide:
                                       BorderSide(color: Colors.blue, width: 1)),
-                              hintText: "Adresse*",
+                              //  hintText: "Adresse*",
                             ),
                           ),
                           Row(
@@ -343,7 +349,89 @@ class ProfilScreen extends StatelessWidget {
         'number': controller.number,
         'adresse': controller.Adresse,
         'date': controller.date,
+        'img': controller.img,
       });
     }
+  }
+
+  Widget bottomSheet(BuildContext context) {
+    double width_var = MediaQuery.of(context).size.width;
+    double height_var = MediaQuery.of(context).size.height;
+    Size size = MediaQuery.of(context).size;
+    return Container(
+      width: double.infinity,
+      height: size.height * 0.2,
+      margin: const EdgeInsets.symmetric(
+        vertical: 20,
+        horizontal: 10,
+      ),
+      child: Column(
+        children: [
+          Text(
+            'Veuillez choisir une photo de profil',
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+          SizedBox(
+            height: height_var * 0.07,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              InkWell(
+                onTap: (() {
+                  takePhoto(ImageSource.gallery);
+                }),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.image,
+                      size: 40,
+                    ),
+                    Text(
+                      "Gallerie",
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              SizedBox(
+                width: width_var * 0.25,
+              ),
+              InkWell(
+                onTap: () {
+                  takePhoto(ImageSource.camera);
+                },
+                child: Column(
+                  children: [
+                    Icon(Icons.camera, size: 40),
+                    Text(
+                      "Camera",
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  void takePhoto(ImageSource source) async {
+    final pickedImage =
+        await imagePicker.getImage(source: source, imageQuality: 100);
+
+    pickedFile = File(pickedImage!.path);
+    controller.img = pickedFile!.path;
+    //print("this is the path ${controller.img}");
+    //print("this is the image path ${pickedFile}");
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/widgets.dart';
@@ -10,6 +12,7 @@ class UserModel {
   String? number;
   String? adresse;
   String? date;
+  String? img;
 
   UserModel({
     this.uid,
@@ -19,6 +22,7 @@ class UserModel {
     this.number,
     this.adresse = '',
     this.date = '',
+    this.img = '',
   });
 
 //receiving data from server
@@ -29,6 +33,9 @@ class UserModel {
       firstname: map['firstname'],
       lastname: map['lastname'],
       number: map['number'],
+      adresse: map['adresse'],
+      date: map['date'],
+      img: map['img'],
     );
   }
 
@@ -42,6 +49,7 @@ class UserModel {
       'number': number,
       'adresse': adresse,
       'date': date,
+      'img': img,
     };
   }
 

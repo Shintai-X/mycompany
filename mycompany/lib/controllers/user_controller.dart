@@ -13,6 +13,7 @@ class UserController extends GetxController {
   String? uid;
   String? date;
   String? Adresse;
+  String? img;
 
   @override
   void onInit() async {
@@ -35,6 +36,7 @@ class UserController extends GetxController {
       uid = this.loggedInUser.uid;
       date = this.loggedInUser.date;
       Adresse = this.loggedInUser.adresse;
+      img = this.loggedInUser.img;
       update();
     });
     super.onInit();
