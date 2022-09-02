@@ -115,7 +115,13 @@ class ProfilScreen extends StatelessWidget {
                                       return ("Veuillez saisir un Nom  valide");
                                     }
                                   },
-                                  controller: lastnameEC,
+                                  controller: TextEditingController(
+                                    text: "${controller.lname}",
+                                  ),
+                                  onChanged: (text) {
+                                    controller.lname = text;
+                                    print("it's my name ${lastnameEC.text}");
+                                  },
                                   decoration: InputDecoration(
                                     filled: true,
                                     fillColor: Colors.white,
@@ -124,7 +130,7 @@ class ProfilScreen extends StatelessWidget {
                                         borderRadius: BorderRadius.circular(10),
                                         borderSide: BorderSide(
                                             color: Colors.blue, width: 1)),
-                                    hintText: "${controller.lname}",
+                                    // hintText: "${controller.lname}",
                                   ),
                                 ),
                               ),
@@ -140,7 +146,13 @@ class ProfilScreen extends StatelessWidget {
                                       return ("Veuillez saisir un Prenom valide");
                                     }
                                   },
-                                  controller: firstnameEC,
+                                  controller: TextEditingController(
+                                    text: "${controller.name}",
+                                  ),
+                                  onChanged: (text) {
+                                    controller.name = text;
+                                    print("it's my name ${firstnameEC.text}");
+                                  },
                                   decoration: InputDecoration(
                                     filled: true,
                                     fillColor: Colors.white,
@@ -169,7 +181,13 @@ class ProfilScreen extends StatelessWidget {
                                 return ("Veuillez saisir une date de naissance valide(dd/mm/yy)");
                               }
                             },
-                            controller: dateEC,
+                            controller: TextEditingController(
+                              text: "${controller.date}",
+                            ),
+                            onChanged: (text) {
+                              controller.date = text;
+                              print("it's my date ${lastnameEC.text}");
+                            },
                             decoration: InputDecoration(
                               filled: true,
                               fillColor: Colors.white,
@@ -196,7 +214,9 @@ class ProfilScreen extends StatelessWidget {
                               }
                               return null;
                             },
-                            controller: mailEC,
+                            controller: TextEditingController(
+                              text: "${controller.email}",
+                            ),
                             decoration: InputDecoration(
                               filled: true,
                               fillColor: Colors.white,
@@ -205,7 +225,7 @@ class ProfilScreen extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(10),
                                   borderSide:
                                       BorderSide(color: Colors.blue, width: 1)),
-                              hintText: "${controller.email}",
+                              // hintText: "${controller.email}",
                             ),
                           ),
                           SizedBox(
@@ -221,7 +241,13 @@ class ProfilScreen extends StatelessWidget {
                                 return ("Veuillez saisir un numero de telephone valide(10 didgts)");
                               }
                             },
-                            controller: numberEC,
+                            controller: TextEditingController(
+                              text: "${controller.number}",
+                            ),
+                            onChanged: (text) {
+                              controller.number = text;
+                              print("it's my name ${numberEC.text}");
+                            },
                             decoration: InputDecoration(
                               filled: true,
                               fillColor: Colors.white,
@@ -242,7 +268,12 @@ class ProfilScreen extends StatelessWidget {
                                 return ("Veuillez saisir une adresse");
                               }
                             },
-                            controller: adresseEC,
+                            controller: TextEditingController(
+                              text: "${controller.Adresse}",
+                            ),
+                            onChanged: (text) {
+                              controller.Adresse = text;
+                            },
                             decoration: InputDecoration(
                               filled: true,
                               fillColor: Colors.white,
@@ -261,7 +292,9 @@ class ProfilScreen extends StatelessWidget {
                             height: height_var * 0.07,
                           ),
                           ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              UpdateUser();
+                            },
                             style: ElevatedButton.styleFrom(
                                 primary: Colors.lightBlue,
                                 padding: EdgeInsets.symmetric(
@@ -296,5 +329,21 @@ class ProfilScreen extends StatelessWidget {
             ),
           );
         });
+  }
+
+  void UpdateUser() {
+    if (_formkey.currentState!.validate()) {
+      final docUser =
+          FirebaseFirestore.instance.collection('users').doc(controller.uid);
+      print('this is the user uid:${controller.uid}');
+      print("this is the user name ${firstnameEC}");
+      docUser.update({
+        'firstname': controller.lname,
+        'lastname': controller.name,
+        'number': controller.number,
+        'adresse': controller.Adresse,
+        'date': controller.date,
+      });
+    }
   }
 }

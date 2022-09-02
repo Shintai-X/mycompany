@@ -8,8 +8,18 @@ class UserModel {
   String? firstname;
   String? lastname;
   String? number;
+  String? adresse;
+  String? date;
 
-  UserModel({this.uid, this.email, this.firstname, this.lastname, this.number});
+  UserModel({
+    this.uid,
+    this.email,
+    this.firstname,
+    this.lastname,
+    this.number,
+    this.adresse = '',
+    this.date = '',
+  });
 
 //receiving data from server
   factory UserModel.fromMap(map) {
@@ -30,6 +40,8 @@ class UserModel {
       'firstname': firstname,
       'lastname': lastname,
       'number': number,
+      'adresse': adresse,
+      'date': date,
     };
   }
 

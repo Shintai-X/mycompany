@@ -10,6 +10,9 @@ class UserController extends GetxController {
   String? lname;
   String? number;
   String? email;
+  String? uid;
+  String? date;
+  String? Adresse;
 
   @override
   void onInit() async {
@@ -29,6 +32,9 @@ class UserController extends GetxController {
       lname = this.loggedInUser.lastname!;
       number = this.loggedInUser.number!;
       email = this.loggedInUser.email!;
+      uid = this.loggedInUser.uid;
+      date = this.loggedInUser.date;
+      Adresse = this.loggedInUser.adresse;
       update();
     });
     super.onInit();

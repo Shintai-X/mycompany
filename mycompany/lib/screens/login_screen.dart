@@ -6,6 +6,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:mycompany/controllers/user_controller.dart';
 import 'package:mycompany/screens/home_screen.dart';
+import 'package:mycompany/screens/passwordreset_screen.dart';
 import 'package:mycompany/screens/registre_screen.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -133,6 +134,9 @@ class LoginScreen extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           InkWell(
+                            onTap: (() {
+                              Get.to(ResetPwdScreen());
+                            }),
                             child: Text(
                               "Mot de passe oublié?",
                               style: TextStyle(
