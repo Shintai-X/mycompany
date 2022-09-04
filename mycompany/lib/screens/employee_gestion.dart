@@ -9,15 +9,19 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:mycompany/controllers/employee_controller.dart';
 import 'package:mycompany/controllers/user_controller.dart';
+import 'package:mycompany/model/employee_model.dart';
 import 'package:mycompany/model/user_model.dart';
 import 'package:image_picker/image_picker.dart';
-
+import 'package:uuid/uuid.dart';
 import 'home_screen.dart';
 import 'login_screen.dart';
 
-class ProfilScreen extends StatelessWidget {
-  ProfilScreen({Key? key}) : super(key: key);
+class EmpRegistreScreen extends StatelessWidget {
+  EmpRegistreScreen({
+    Key? key,
+  }) : super(key: key);
   File? pickedFile;
   ImagePicker imagePicker = ImagePicker();
   final _formkey = GlobalKey<FormState>();
@@ -26,24 +30,22 @@ class ProfilScreen extends StatelessWidget {
   final lastnameEC = TextEditingController();
   final numberEC = TextEditingController();
   final mailEC = TextEditingController();
-  final adresseEC = TextEditingController();
-  final dateEC = TextEditingController();
-  UserController controller = Get.put(UserController());
-  FirebaseAuth _auth = FirebaseAuth.instance;
+  final PosteEC = TextEditingController();
+  EmployeeController controller2 = Get.put(EmployeeController());
   String? errorMessage;
 
   @override
   Widget build(BuildContext context) {
     double width_var = MediaQuery.of(context).size.width;
     double height_var = MediaQuery.of(context).size.height;
-    return GetBuilder<UserController>(
-        init: UserController(),
-        builder: (controller) {
+    return GetBuilder<EmployeeController>(
+        init: EmployeeController(),
+        builder: (controller2) {
           return SafeArea(
             child: Scaffold(
               appBar: AppBar(
                 elevation: 0,
-                title: Text("Profil"),
+                title: Text("Employee"),
                 automaticallyImplyLeading: true,
               ),
               body: Container(
@@ -58,7 +60,7 @@ class ProfilScreen extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            "Modifer votre profil",
+                            "Ajouter un employee",
                             textAlign: TextAlign.left,
                             style: TextStyle(
                                 fontSize: 25,
@@ -80,10 +82,7 @@ class ProfilScreen extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(16.0),
                                   image: DecorationImage(
                                     fit: BoxFit.cover,
-                                    image: (controller.img != '')
-                                        ? FileImage(File(controller.img!))
-                                            as ImageProvider
-                                        : AssetImage("assets/noir.jpg"),
+                                    image: AssetImage("assets/noir.jpg"),
                                   ),
                                 ),
                               ),
@@ -115,6 +114,7 @@ class ProfilScreen extends StatelessWidget {
                               SizedBox(
                                 width: width_var * 0.46,
                                 child: TextFormField(
+                                  controller: lastnameEC,
                                   validator: (value) {
                                     RegExp regex = new RegExp(r'[A-Za-z]');
                                     if (value!.isEmpty) {
@@ -124,13 +124,6 @@ class ProfilScreen extends StatelessWidget {
                                       return ("Veuillez saisir un Nom  valide");
                                     }
                                   },
-                                  controller: TextEditingController(
-                                    text: "${controller.lname}",
-                                  ),
-                                  onChanged: (text) {
-                                    controller.lname = text;
-                                    print("it's my name ${lastnameEC.text}");
-                                  },
                                   decoration: InputDecoration(
                                     filled: true,
                                     fillColor: Colors.white,
@@ -139,13 +132,14 @@ class ProfilScreen extends StatelessWidget {
                                         borderRadius: BorderRadius.circular(10),
                                         borderSide: BorderSide(
                                             color: Colors.blue, width: 1)),
-                                    // hintText: "${controller.lname}",
+                                    hintText: "Nom*",
                                   ),
                                 ),
                               ),
                               SizedBox(
                                 width: width_var * 0.46,
                                 child: TextFormField(
+                                  controller: firstnameEC,
                                   validator: (value) {
                                     RegExp regex = new RegExp(r'[A-Za-z]');
                                     if (value!.isEmpty) {
@@ -155,13 +149,6 @@ class ProfilScreen extends StatelessWidget {
                                       return ("Veuillez saisir un Prenom valide");
                                     }
                                   },
-                                  controller: TextEditingController(
-                                    text: "${controller.name}",
-                                  ),
-                                  onChanged: (text) {
-                                    controller.name = text;
-                                    print("it's my name ${firstnameEC.text}");
-                                  },
                                   decoration: InputDecoration(
                                     filled: true,
                                     fillColor: Colors.white,
@@ -170,7 +157,7 @@ class ProfilScreen extends StatelessWidget {
                                         borderRadius: BorderRadius.circular(10),
                                         borderSide: BorderSide(
                                             color: Colors.blue, width: 1)),
-                                    hintText: "${controller.name}",
+                                    hintText: "Prenom*",
                                   ),
                                 ),
                               ),
@@ -179,39 +166,11 @@ class ProfilScreen extends StatelessWidget {
                           SizedBox(
                             height: height_var * 0.01,
                           ),
-                          TextFormField(
-                            // validator: (value) {
-                            //   RegExp regex = RegExp(
-                            //       r'(\d{4}-?\d\d-?\d\d(\s|T)\d\d:?\d\d:?\d\d)');
-                            //   if (value!.isEmpty) {
-                            //     return ("Veuillez saisir une Date de naissance");
-                            //   }
-                            //   if (!regex.hasMatch(value)) {
-                            //     return ("Veuillez saisir une date de naissance valide(yyyy/mm/dd)");
-                            //   }
-                            // },
-                            controller: TextEditingController(
-                              text: "${controller.date}",
-                            ),
-                            onChanged: (text) {
-                              controller.date = text;
-                              print("it's my date ${lastnameEC.text}");
-                            },
-                            decoration: InputDecoration(
-                              filled: true,
-                              fillColor: Colors.white,
-                              prefixIcon: Icon(Icons.calendar_month),
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide:
-                                      BorderSide(color: Colors.blue, width: 1)),
-                              hintText: "Date de Naissance*",
-                            ),
-                          ),
                           SizedBox(
                             height: height_var * 0.01,
                           ),
                           TextFormField(
+                            controller: mailEC,
                             validator: (value) {
                               if (value!.isEmpty) {
                                 return ("Veuillez saisir votre email!");
@@ -223,9 +182,6 @@ class ProfilScreen extends StatelessWidget {
                               }
                               return null;
                             },
-                            controller: TextEditingController(
-                              text: "${controller.email}",
-                            ),
                             decoration: InputDecoration(
                               filled: true,
                               fillColor: Colors.white,
@@ -234,13 +190,14 @@ class ProfilScreen extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(10),
                                   borderSide:
                                       BorderSide(color: Colors.blue, width: 1)),
-                              // hintText: "${controller.email}",
+                              hintText: "Email*",
                             ),
                           ),
                           SizedBox(
                             height: height_var * 0.01,
                           ),
                           TextFormField(
+                            controller: numberEC,
                             validator: (value) {
                               RegExp regex = new RegExp(r'^[0-9]{10}$');
                               if (value!.isEmpty) {
@@ -250,13 +207,6 @@ class ProfilScreen extends StatelessWidget {
                                 return ("Veuillez saisir un numero de telephone valide(10 didgts)");
                               }
                             },
-                            controller: TextEditingController(
-                              text: "${controller.number}",
-                            ),
-                            onChanged: (text) {
-                              controller.number = text;
-                              print("it's my name ${numberEC.text}");
-                            },
                             decoration: InputDecoration(
                               filled: true,
                               fillColor: Colors.white,
@@ -265,23 +215,18 @@ class ProfilScreen extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(10),
                                   borderSide:
                                       BorderSide(color: Colors.blue, width: 1)),
-                              //  hintText: "${controller.number}",
+                              hintText: "Numéro de telephone*",
                             ),
                           ),
                           SizedBox(
                             height: height_var * 0.01,
                           ),
                           TextFormField(
+                            controller: PosteEC,
                             validator: (value) {
                               if (value!.isEmpty) {
-                                return ("Veuillez saisir une adresse");
+                                return ("Veuillez saisir un poste");
                               }
-                            },
-                            controller: TextEditingController(
-                              text: "${controller.Adresse}",
-                            ),
-                            onChanged: (text) {
-                              controller.Adresse = text;
                             },
                             decoration: InputDecoration(
                               filled: true,
@@ -291,7 +236,7 @@ class ProfilScreen extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(10),
                                   borderSide:
                                       BorderSide(color: Colors.blue, width: 1)),
-                              hintText: "Adresse*",
+                              hintText: "Poste*",
                             ),
                           ),
                           Row(
@@ -302,16 +247,16 @@ class ProfilScreen extends StatelessWidget {
                           ),
                           ElevatedButton(
                             onPressed: () {
-                              UpdateUser();
+                              Add();
                             },
                             style: ElevatedButton.styleFrom(
                                 primary: Colors.lightBlue,
                                 padding: EdgeInsets.symmetric(
-                                    horizontal: width_var * 0.30,
+                                    horizontal: width_var * 0.35,
                                     vertical: height_var * 0.01),
                                 textStyle: TextStyle(
                                     fontSize: 20, fontWeight: FontWeight.bold)),
-                            child: Text("Enregistrer"),
+                            child: Text("Ajouter"),
                           ),
                           SizedBox(
                             height: height_var * 0.01,
@@ -340,25 +285,6 @@ class ProfilScreen extends StatelessWidget {
         });
   }
 
-  void UpdateUser() {
-    if (_formkey.currentState!.validate()) {
-      final docUser =
-          FirebaseFirestore.instance.collection('users').doc(controller.uid);
-      print('this is the user uid:${controller.uid}');
-      print("this is the user name ${firstnameEC}");
-      docUser.update({
-        'firstname': controller.lname,
-        'lastname': controller.name,
-        'number': controller.number,
-        'adresse': controller.Adresse,
-        'date': controller.date,
-        'img': controller.img,
-      });
-      Get.to(HomeScreen());
-      controller.dispose();
-    }
-  }
-
   Widget bottomSheet(BuildContext context) {
     double width_var = MediaQuery.of(context).size.width;
     double height_var = MediaQuery.of(context).size.height;
@@ -384,7 +310,7 @@ class ProfilScreen extends StatelessWidget {
             children: [
               InkWell(
                 onTap: (() {
-                  takePhoto(ImageSource.gallery);
+                  takePhoto2(ImageSource.gallery);
                 }),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -408,7 +334,7 @@ class ProfilScreen extends StatelessWidget {
               ),
               InkWell(
                 onTap: () {
-                  takePhoto(ImageSource.camera);
+                  takePhoto2(ImageSource.camera);
                 },
                 child: Column(
                   children: [
@@ -430,13 +356,31 @@ class ProfilScreen extends StatelessWidget {
     );
   }
 
-  void takePhoto(ImageSource source) async {
+  Future<void> Add() async {
+    if (_formkey.currentState!.validate()) {
+      EmployeeModel em = EmployeeModel();
+      FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+      var uuid = Uuid();
+      em.uid = uuid.v4();
+      em.firstname = firstnameEC.text;
+      em.lastname = lastnameEC.text;
+      em.email = mailEC.text;
+      em.poste = PosteEC.text;
+      em.number = numberEC.text;
+      em.img = controller2.img;
+      await firebaseFirestore
+          .collection("employees")
+          .doc(em.uid)
+          .set(em.toMap());
+    }
+  }
+
+  void takePhoto2(ImageSource source) async {
+    //EmployeeModel em = EmployeeModel();
     final pickedImage =
         await imagePicker.pickImage(source: source, imageQuality: 100);
 
     pickedFile = File(pickedImage!.path);
-    controller.img = pickedFile!.path;
-    print("this is the path ${controller.img}");
-    //print("this is the image path ${pickedFile}");
+    controller2.img = pickedFile!.path;
   }
 }

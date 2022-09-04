@@ -1,40 +1,37 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/widgets.dart';
 
-class UserModel {
+class EmployeeModel {
   String? uid;
-  String? email;
   String? firstname;
   String? lastname;
-  String? number;
-  String? adresse;
-  String? date;
+  String? email;
   String? img;
+  String? poste;
+  String? number;
 
-  UserModel({
-    this.uid,
-    this.email,
-    this.firstname,
-    this.lastname,
-    this.number,
-    this.adresse = '',
-    this.date = '',
-    this.img,
-  });
+  EmployeeModel(
+      {this.firstname,
+      this.lastname,
+      this.email,
+      this.img,
+      this.poste,
+      this.uid,
+      this.number});
 
-//receiving data from server
-  factory UserModel.fromMap(map) {
-    return UserModel(
+  //receiving data from server
+  factory EmployeeModel.fromMap(map) {
+    return EmployeeModel(
       uid: map['uid'],
       email: map['email'],
       firstname: map['firstname'],
       lastname: map['lastname'],
       number: map['number'],
-      adresse: map['adresse'],
-      date: map['date'],
+      poste: map['poste'],
       img: map['img'],
     );
   }
@@ -47,13 +44,8 @@ class UserModel {
       'firstname': firstname,
       'lastname': lastname,
       'number': number,
-      'adresse': adresse,
-      'date': date,
       'img': img,
+      'poste': poste,
     };
-  }
-
-  void pr() {
-    print('${this.uid}+${this.email}+${this.lastname}+${this.number}');
   }
 }
