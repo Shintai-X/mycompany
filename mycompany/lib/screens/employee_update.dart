@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'dart:convert';
+
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -19,10 +20,10 @@ import 'package:uuid/uuid.dart';
 import 'home_screen.dart';
 import 'login_screen.dart';
 
-class EmpRegistreScreen extends StatelessWidget {
-  EmpRegistreScreen({
-    Key? key,
-  }) : super(key: key);
+class EmpUpdateScreen extends StatelessWidget {
+  final int index;
+  EmpUpdateScreen({required this.index});
+
   File? pickedFile;
   ImagePicker imagePicker = ImagePicker();
   final _formkey = GlobalKey<FormState>();
@@ -33,6 +34,7 @@ class EmpRegistreScreen extends StatelessWidget {
   final mailEC = TextEditingController();
   final PosteEC = TextEditingController();
   EmployeeController controller2 = Get.put(EmployeeController());
+
   String? errorMessage;
 
   @override
@@ -41,7 +43,7 @@ class EmpRegistreScreen extends StatelessWidget {
     double height_var = MediaQuery.of(context).size.height;
     return GetBuilder<EmployeeController>(
         init: EmployeeController(),
-        builder: (controller2) {
+        builder: (controller) {
           return SafeArea(
             child: Scaffold(
               appBar: AppBar(
@@ -61,7 +63,7 @@ class EmpRegistreScreen extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            "Ajouter un employee",
+                            "Modifier un employee",
                             textAlign: TextAlign.left,
                             style: TextStyle(
                                 fontSize: 25,
@@ -83,7 +85,8 @@ class EmpRegistreScreen extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(16.0),
                                   image: DecorationImage(
                                       fit: BoxFit.cover,
-                                      image: AssetImage("assets/noir.jpg")),
+                                      image: FileImage(File(
+                                          controller2.emplist[index].img!))),
                                 ),
                               ),
                               //Text("This is the path ${controller.img}"),
@@ -114,7 +117,13 @@ class EmpRegistreScreen extends StatelessWidget {
                               SizedBox(
                                 width: width_var * 0.46,
                                 child: TextFormField(
-                                  controller: lastnameEC,
+                                  controller: TextEditingController(
+                                    text:
+                                        "${controller2.emplist[index].lastname}",
+                                  ),
+                                  onChanged: (text) {
+                                    controller2.emplist[index].lastname = text;
+                                  },
                                   validator: (value) {
                                     RegExp regex = new RegExp(r'[A-Za-z]');
                                     if (value!.isEmpty) {
@@ -132,14 +141,19 @@ class EmpRegistreScreen extends StatelessWidget {
                                         borderRadius: BorderRadius.circular(10),
                                         borderSide: BorderSide(
                                             color: Colors.blue, width: 1)),
-                                    hintText: "Nom*",
                                   ),
                                 ),
                               ),
                               SizedBox(
                                 width: width_var * 0.46,
                                 child: TextFormField(
-                                  controller: firstnameEC,
+                                  controller: TextEditingController(
+                                    text:
+                                        "${controller2.emplist[index].firstname}",
+                                  ),
+                                  onChanged: (text) {
+                                    controller2.emplist[index].firstname = text;
+                                  },
                                   validator: (value) {
                                     RegExp regex = new RegExp(r'[A-Za-z]');
                                     if (value!.isEmpty) {
@@ -170,7 +184,12 @@ class EmpRegistreScreen extends StatelessWidget {
                             height: height_var * 0.01,
                           ),
                           TextFormField(
-                            controller: mailEC,
+                            controller: TextEditingController(
+                              text: "${controller2.emplist[index].email}",
+                            ),
+                            onChanged: (text) {
+                              controller2.emplist[index].email = text;
+                            },
                             validator: (value) {
                               if (value!.isEmpty) {
                                 return ("Veuillez saisir votre email!");
@@ -197,7 +216,12 @@ class EmpRegistreScreen extends StatelessWidget {
                             height: height_var * 0.01,
                           ),
                           TextFormField(
-                            controller: numberEC,
+                            controller: TextEditingController(
+                              text: "${controller2.emplist[index].number}",
+                            ),
+                            onChanged: (text) {
+                              controller2.emplist[index].number = text;
+                            },
                             validator: (value) {
                               RegExp regex = new RegExp(r'^[0-9]{10}$');
                               if (value!.isEmpty) {
@@ -222,7 +246,12 @@ class EmpRegistreScreen extends StatelessWidget {
                             height: height_var * 0.01,
                           ),
                           TextFormField(
-                            controller: PosteEC,
+                            controller: TextEditingController(
+                              text: "${controller2.emplist[index].poste}",
+                            ),
+                            onChanged: (text) {
+                              controller2.emplist[index].poste = text;
+                            },
                             validator: (value) {
                               if (value!.isEmpty) {
                                 return ("Veuillez saisir un poste");
@@ -247,32 +276,33 @@ class EmpRegistreScreen extends StatelessWidget {
                           ),
                           ElevatedButton(
                             onPressed: () {
-                              Add();
+                              UpdateEmp();
                             },
                             style: ElevatedButton.styleFrom(
                                 primary: Colors.lightBlue,
                                 padding: EdgeInsets.symmetric(
-                                    horizontal: width_var * 0.35,
+                                    horizontal: width_var * 0.32,
                                     vertical: height_var * 0.01),
                                 textStyle: TextStyle(
                                     fontSize: 20, fontWeight: FontWeight.bold)),
-                            child: Text("Ajouter"),
+                            child: Text("Enregistrer"),
                           ),
                           SizedBox(
                             height: height_var * 0.01,
                           ),
                           ElevatedButton(
                             onPressed: () {
-                              Get.to(HomeScreen());
+                              print('index: ${index}');
+                              DeleteEmp();
                             },
                             style: ElevatedButton.styleFrom(
                                 primary: Colors.grey,
                                 padding: EdgeInsets.symmetric(
-                                    horizontal: width_var * 0.34,
+                                    horizontal: width_var * 0.32,
                                     vertical: height_var * 0.01),
                                 textStyle: TextStyle(
                                     fontSize: 20, fontWeight: FontWeight.bold)),
-                            child: Text("Annuler"),
+                            child: Text("Supprrimer"),
                           ),
                         ],
                       ),
@@ -356,27 +386,35 @@ class EmpRegistreScreen extends StatelessWidget {
     );
   }
 
-  Future<void> Add() async {
+  void UpdateEmp() {
+    var uidd = controller2.emplist[index].uid;
     if (_formkey.currentState!.validate()) {
-      EmployeeModel em = EmployeeModel();
-      FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
-      var uuid = Uuid();
-      em.uid = uuid.v4();
-      em.firstname = firstnameEC.text;
-      em.lastname = lastnameEC.text;
-      em.email = mailEC.text;
-      em.poste = PosteEC.text;
-      em.number = numberEC.text;
-      em.img = controller2.img;
-      await firebaseFirestore
-          .collection("employees")
-          .doc(em.uid)
-          .set(em.toMap());
+      final docUser =
+          FirebaseFirestore.instance.collection('employees').doc(uidd);
 
+      docUser.update({
+        'firstname': controller2.emplist[index].firstname,
+        'lastname': controller2.emplist[index].lastname,
+        'number': controller2.emplist[index].number,
+        'poste': controller2.emplist[index].poste,
+        'img': controller2.emplist[index].img,
+      });
       Get.to(EmployeeScreen());
-      controller2.refresh();
-      controller2.update();
     }
+  }
+
+  void DeleteEmp() {
+    // You can safely access the element here.
+
+    print(controller2.emplist);
+    final docEmp = FirebaseFirestore.instance
+        .collection('employees')
+        .doc(controller2.emplist[index].uid)
+        .delete();
+    controller2.emplist.removeAt(index);
+    controller2.refresh();
+
+    Get.to(EmployeeScreen());
   }
 
   void takePhoto2(ImageSource source) async {

@@ -66,6 +66,26 @@ class HomeScreen extends StatelessWidget {
                       ),
                       textAlign: TextAlign.end,
                     ),
+
+                    InkWell(
+                      child: Icon(
+                        Icons.add,
+                        color: Colors.grey,
+                        size: 30,
+                      ),
+                      onTap: () {
+                        Get.to(EmployeeScreen());
+                      },
+                    ),
+                    Text(
+                      "Département",
+                      style: TextStyle(
+                        color: Colors.blue,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.end,
+                    ),
                     Spacer(),
                     InkWell(
                       child: Icon(

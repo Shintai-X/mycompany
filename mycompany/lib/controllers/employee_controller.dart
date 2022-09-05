@@ -9,7 +9,7 @@ class EmployeeController extends GetxController {
   String? firstname;
   String? lastname;
   String? email;
-  String? img;
+  String img = '';
   String? poste;
   String? number;
 
@@ -22,15 +22,23 @@ class EmployeeController extends GetxController {
           .get();
       for (var emp in emps.docs) {
         EmployeeModel em = EmployeeModel();
+        em.uid = emp['uid'];
         em.firstname = emp['firstname'];
         em.lastname = emp['lastname'];
         em.poste = emp['poste'];
+        em.img = emp['img'];
+        em.email = emp['email'];
+        em.number = emp['number'];
         emplist.add(em);
-
         update();
+        refresh();
       }
     } catch (e) {
       Get.snackbar('error', '${e.toString()}');
     }
+  }
+
+  void Ref() {
+    update();
   }
 }
