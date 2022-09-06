@@ -293,7 +293,7 @@ class EmpUpdateScreen extends StatelessWidget {
                           ElevatedButton(
                             onPressed: () {
                               print('index: ${index}');
-                              DeleteEmp();
+                              Get.back();
                             },
                             style: ElevatedButton.styleFrom(
                                 primary: Colors.grey,
@@ -302,7 +302,7 @@ class EmpUpdateScreen extends StatelessWidget {
                                     vertical: height_var * 0.01),
                                 textStyle: TextStyle(
                                     fontSize: 20, fontWeight: FontWeight.bold)),
-                            child: Text("Supprrimer"),
+                            child: Text("Supprimer"),
                           ),
                         ],
                       ),
@@ -401,20 +401,6 @@ class EmpUpdateScreen extends StatelessWidget {
       });
       Get.to(EmployeeScreen());
     }
-  }
-
-  void DeleteEmp() {
-    // You can safely access the element here.
-
-    print(controller2.emplist);
-    final docEmp = FirebaseFirestore.instance
-        .collection('employees')
-        .doc(controller2.emplist[index].uid)
-        .delete();
-    controller2.emplist.removeAt(index);
-    controller2.refresh();
-
-    Get.to(EmployeeScreen());
   }
 
   void takePhoto2(ImageSource source) async {

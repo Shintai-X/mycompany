@@ -5,21 +5,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
+import 'package:mycompany/controllers/deptemp_controller.dart';
 import 'package:mycompany/controllers/employee_controller.dart';
 import 'package:mycompany/screens/employee_gestion.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mycompany/screens/employee_update.dart';
 import 'package:mycompany/screens/home_screen.dart';
 
-class EmployeeScreen extends StatelessWidget {
-  EmployeeScreen({Key? key}) : super(key: key);
+class DeptEmpScreen extends StatelessWidget {
+  DeptEmpScreen({Key? key}) : super(key: key);
 
-  EmployeeController controller2 = Get.put(EmployeeController());
+  EmployeeController controller4 = Get.put(EmployeeController());
   @override
   Widget build(BuildContext context) {
     double width_var = MediaQuery.of(context).size.width;
     double height_var = MediaQuery.of(context).size.height;
-    return GetBuilder(
+    return GetBuilder<EmployeeController>(
         init: EmployeeController(),
         builder: (controller) {
           return Scaffold(
@@ -30,7 +31,7 @@ class EmployeeScreen extends StatelessWidget {
                   Get.to(HomeScreen());
                 },
               ),
-              title: Text("Employé"),
+              title: Text("Employé "),
               automaticallyImplyLeading: false,
             ),
             body: Column(
@@ -50,37 +51,14 @@ class EmployeeScreen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           // ignore: prefer_const_constructors
-                          Row(
-                            children: [
-                              Text(
-                                "Ajouter",
-                                style: TextStyle(
-                                  color: Colors.blue,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                textAlign: TextAlign.end,
-                              ),
-                              Spacer(),
-                              InkWell(
-                                child: Icon(
-                                  Icons.add,
-                                  color: Colors.grey,
-                                  size: 30,
-                                ),
-                                onTap: () {
-                                  Get.to(EmpRegistreScreen());
-                                },
-                              ),
-                            ],
-                          ),
+
                           SizedBox(
-                            height: 10,
+                            height: 5,
                           ),
                           Expanded(
                             child: ListView.builder(
                                 key: UniqueKey(),
-                                itemCount: controller2.emplist.length,
+                                itemCount: controller4.emplist.length,
                                 itemBuilder: (BuildContext context, index) {
                                   return Row(
                                     //mainAxisAlignment: MainAxisAlignment.center,
@@ -99,21 +77,20 @@ class EmployeeScreen extends StatelessWidget {
                                                 final docEmp = FirebaseFirestore
                                                     .instance
                                                     .collection('employees')
-                                                    .doc(controller2
+                                                    .doc(controller4
                                                         .emplist[index].uid)
                                                     .delete();
-                                                controller2.emplist
+                                                controller4.emplist
                                                     .removeAt(index);
-                                                controller2.refresh();
+                                                controller4.refresh();
                                               },
                                               child: Card(
                                                 child: InkWell(
-                                                  onTap: () {
-                                                    Get.to(EmpUpdateScreen(
-                                                        index: index));
-                                                  },
+                                                  onTap: () {},
                                                   child: Row(
                                                     children: [
+                                                      Text(
+                                                          '${controller4.emplist.length}'),
                                                       SizedBox(
                                                         height: 80,
                                                         width: width_var * 0.20,
@@ -131,14 +108,14 @@ class EmployeeScreen extends StatelessWidget {
                                                             image:
                                                                 DecorationImage(
                                                               fit: BoxFit.cover,
-                                                              image: controller2
+                                                              image: controller4
                                                                           .emplist[
                                                                               index]
                                                                           .img ==
                                                                       null
                                                                   ? AssetImage(
                                                                       "assets/noir.jpg")
-                                                                  : FileImage(File(controller2
+                                                                  : FileImage(File(controller4
                                                                       .emplist[
                                                                           index]
                                                                       .img!)) as ImageProvider,
@@ -152,7 +129,7 @@ class EmployeeScreen extends StatelessWidget {
                                                                 .center,
                                                         children: [
                                                           Text(
-                                                            "${controller2.emplist[index].firstname} ${controller2.emplist[index].lastname} \n ${controller2.emplist[index].poste}",
+                                                            "${controller4.emplist[index].firstname} ${controller4.emplist[index].lastname} \n ${controller4.emplist[index].poste}",
                                                             style: TextStyle(
                                                               color:
                                                                   Colors.blue,

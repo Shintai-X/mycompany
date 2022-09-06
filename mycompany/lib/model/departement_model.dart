@@ -5,7 +5,17 @@ import 'package:flutter/widgets.dart';
 import 'package:mycompany/model/employee_model.dart';
 
 class DepartementModel {
-  String? nom;
-  String? img;
-  late List<EmployeeModel> emps;
+  String? uid;
+  String? name;
+  late List<String> empuid;
+
+  DepartementModel({this.name});
+
+  Map<String, dynamic> toMap() {
+    return {
+      'uid': uid,
+      'name': name,
+      'empuid': empuid,
+    };
+  }
 }

@@ -372,7 +372,7 @@ class EmpRegistreScreen extends StatelessWidget {
           .collection("employees")
           .doc(em.uid)
           .set(em.toMap());
-
+      controller2.emplist.add(em);
       Get.to(EmployeeScreen());
       controller2.refresh();
       controller2.update();

@@ -5,7 +5,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:mycompany/model/departement_model.dart';
 import 'package:mycompany/model/user_model.dart';
+import 'package:mycompany/screens/departement_screen.dart';
 import 'package:mycompany/screens/employee_screen.dart';
 import 'package:mycompany/screens/login_screen.dart';
 import 'package:mycompany/screens/profil_screen.dart';
@@ -94,7 +96,7 @@ class HomeScreen extends StatelessWidget {
                         size: 30,
                       ),
                       onTap: () {
-                        Get.to(EmployeeScreen());
+                        Get.to(DepartementScreen());
                       },
                     ),
                   ],
