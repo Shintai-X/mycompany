@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:mycompany/controllers/departement_controller.dart';
 import 'package:mycompany/controllers/employee_controller.dart';
 import 'package:mycompany/model/departement_model.dart';
+import 'package:mycompany/screens/dep_emp_screen.dart';
 import 'package:mycompany/screens/dept_user_screen.dart';
 import 'package:mycompany/screens/employee_gestion.dart';
 import 'package:image_picker/image_picker.dart';
@@ -19,14 +20,14 @@ class DepartementScreen extends StatelessWidget {
   DepartementScreen({Key? key}) : super(key: key);
   final nameEC = TextEditingController();
   DepartementController controller3 = Get.put(DepartementController());
-
+  EmployeeController controller4 = Get.put(EmployeeController());
   @override
   Widget build(BuildContext context) {
     double width_var = MediaQuery.of(context).size.width;
     double height_var = MediaQuery.of(context).size.height;
     return GetBuilder(
         init: DepartementController(),
-        builder: (controller) {
+        builder: (controller2) {
           return Scaffold(
             appBar: AppBar(
               leading: IconButton(
@@ -220,7 +221,14 @@ class DepartementScreen extends StatelessWidget {
                                               child: Card(
                                                 child: InkWell(
                                                   onTap: () {
-                                                    Get.to(DeptEmpScreen());
+                                                    Get.to(TwoDeptEmpScreen(
+                                                        controller3
+                                                            .emplist[index].uid,
+                                                        index));
+                                                    controller3.update();
+                                                    controller4.update();
+
+                                                    print("test");
                                                   },
                                                   child: Row(
                                                     children: [
@@ -241,39 +249,60 @@ class DepartementScreen extends StatelessWidget {
                                                           ),
                                                         ),
                                                       ),
-                                                      Column(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        mainAxisSize:
-                                                            MainAxisSize.max,
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .start,
+                                                      Stack(
                                                         children: [
-                                                          Text(
-                                                              '${controller3.emplist[index].name}',
-                                                              style: TextStyle(
-                                                                  color: Colors
-                                                                      .blue,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold)),
-                                                          SizedBox(
-                                                            height: height_var *
-                                                                0.03,
-                                                          ),
-                                                          Text('employés',
-                                                              style: TextStyle(
-                                                                color:
-                                                                    Colors.grey,
-                                                              )),
-                                                          SizedBox(
-                                                            width:
-                                                                width_var * 0.3,
+                                                          Column(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            mainAxisSize:
+                                                                MainAxisSize
+                                                                    .max,
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              Text(
+                                                                  '${controller3.emplist[index].name}',
+                                                                  style: TextStyle(
+                                                                      color: Colors
+                                                                          .blue,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold)),
+                                                              SizedBox(
+                                                                height:
+                                                                    height_var *
+                                                                        0.03,
+                                                              ),
+                                                              Text('employés',
+                                                                  style:
+                                                                      TextStyle(
+                                                                    color: Colors
+                                                                        .grey,
+                                                                  )),
+                                                              SizedBox(
+                                                                width:
+                                                                    width_var *
+                                                                        0.3,
+                                                              ),
+                                                            ],
                                                           ),
                                                         ],
                                                       ),
+                                                      SizedBox(
+                                                        width: width_var * 0.45,
+                                                      ),
+                                                      IconButton(
+                                                          onPressed: () {
+                                                            Get.to(DeptEmpScreen(
+                                                                controller3
+                                                                    .emplist[
+                                                                        index]
+                                                                    .uid));
+                                                          },
+                                                          icon:
+                                                              Icon(Icons.add)),
                                                     ],
                                                   ),
                                                 ),

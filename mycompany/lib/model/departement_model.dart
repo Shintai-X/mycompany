@@ -7,9 +7,9 @@ import 'package:mycompany/model/employee_model.dart';
 class DepartementModel {
   String? uid;
   String? name;
-  late List<String> empuid;
+  late List<dynamic> empuid;
 
-  DepartementModel({this.name});
+  DepartementModel({this.name, empuid});
 
   Map<String, dynamic> toMap() {
     return {
@@ -17,5 +17,11 @@ class DepartementModel {
       'name': name,
       'empuid': empuid,
     };
+  }
+
+  factory DepartementModel.fromMap(map) {
+    return DepartementModel(
+      empuid: map['empuid'],
+    );
   }
 }

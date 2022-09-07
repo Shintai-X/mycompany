@@ -8,7 +8,7 @@ class DepartementController extends GetxController {
   var emplist = <DepartementModel>[];
   String? uid;
   String? name;
-  String? empuid;
+  var empuid = <dynamic>[];
 
   @override
   void onInit() async {
@@ -21,10 +21,11 @@ class DepartementController extends GetxController {
         DepartementModel em = DepartementModel();
         em.name = emp['name'];
         em.uid = emp['uid'];
-        //em.empuid = emp['empuid'];
+        em.empuid = emp['empuid'];
+        print(em.empuid.length);
         emplist.add(em);
         update();
-        refresh();
+        // refresh();
       }
     } catch (e) {
       Get.snackbar('error', '${e.toString()}');

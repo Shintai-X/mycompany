@@ -13,29 +13,32 @@ import 'package:image_picker/image_picker.dart';
 import 'package:mycompany/screens/employee_update.dart';
 import 'package:mycompany/screens/home_screen.dart';
 
-class DeptEmpScreen extends StatelessWidget {
+class TwoDeptEmpScreen extends StatelessWidget {
   // DeptEmpScreen({Key? key}) : super(key: key);
   final String? depuid;
-  DeptEmpScreen(this.depuid);
+  final int? index2;
+  TwoDeptEmpScreen(this.depuid, this.index2, {super.key});
   EmployeeController controller4 = Get.put(EmployeeController());
-  DepartementController controller5 = Get.put(DepartementController());
+  DepartementController controller9 = Get.put(DepartementController());
+
   @override
   Widget build(BuildContext context) {
     double width_var = MediaQuery.of(context).size.width;
     double height_var = MediaQuery.of(context).size.height;
-    return GetBuilder<EmployeeController>(
-        init: EmployeeController(),
+    return GetBuilder<DepartementController>(
+        init: DepartementController(),
         builder: (controller) {
           return Scaffold(
             appBar: AppBar(
-              leading: IconButton(
-                icon: Icon(Icons.arrow_back),
-                onPressed: () {
-                  Get.to(HomeScreen());
-                },
-              ),
-              title: Text("Employé "),
-              automaticallyImplyLeading: false,
+              // leading: IconButton(
+              //   icon: Icon(Icons.arrow_back),
+              //   onPressed: () {
+              //     Get.to(HomeScreen());
+              //   },
+              // ),
+              title: Text(
+                  "${controller9.emplist[index2 as int].name} ${controller9.emplist[index2 as int].empuid.length} "),
+              automaticallyImplyLeading: true,
             ),
             body: Column(
               children: [
@@ -61,7 +64,8 @@ class DeptEmpScreen extends StatelessWidget {
                           Expanded(
                             child: ListView.builder(
                                 key: UniqueKey(),
-                                itemCount: controller4.emplist.length,
+                                itemCount: controller9
+                                    .emplist[index2 as int].empuid.length,
                                 itemBuilder: (BuildContext context, index) {
                                   return Row(
                                     //mainAxisAlignment: MainAxisAlignment.center,
@@ -76,37 +80,10 @@ class DeptEmpScreen extends StatelessWidget {
                                               background: Container(
                                                 color: Colors.red,
                                               ),
-                                              onDismissed: (direction) {
-                                                final docEmp = FirebaseFirestore
-                                                    .instance
-                                                    .collection('employees')
-                                                    .doc(controller4
-                                                        .emplist[index].uid)
-                                                    .delete();
-                                                controller4.emplist
-                                                    .removeAt(index);
-                                                controller4.refresh();
-                                                controller5.refresh();
-                                              },
+                                              onDismissed: (direction) {},
                                               child: Card(
                                                 child: InkWell(
-                                                  onTap: () {
-                                                    final docUser =
-                                                        FirebaseFirestore
-                                                            .instance
-                                                            .collection(
-                                                                'departement')
-                                                            .doc(depuid);
-                                                    print(docUser);
-
-                                                    docUser.update({
-                                                      'empuid': FieldValue
-                                                          .arrayUnion([
-                                                        '${controller4.emplist[index].uid}'
-                                                      ]),
-                                                    });
-                                                    controller4.update();
-                                                  },
+                                                  onTap: () {},
                                                   child: Row(
                                                     children: [
                                                       SizedBox(
@@ -147,7 +124,7 @@ class DeptEmpScreen extends StatelessWidget {
                                                                 .center,
                                                         children: [
                                                           Text(
-                                                            "${controller4.emplist[index].firstname} ${controller4.emplist[index].lastname} \n ${controller4.emplist[index].poste}",
+                                                            "${controller9.emplist[index2 as int].empuid[index]} ",
                                                             style: TextStyle(
                                                               color:
                                                                   Colors.blue,
