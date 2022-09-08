@@ -28,14 +28,16 @@ class DeptEmpScreen extends StatelessWidget {
         builder: (controller) {
           return Scaffold(
             appBar: AppBar(
-              leading: IconButton(
-                icon: Icon(Icons.arrow_back),
-                onPressed: () {
-                  Get.to(HomeScreen());
-                },
-              ),
+              // leading: IconButton(
+              //   icon: Icon(Icons.arrow_back),
+              //   onPressed: () {
+              //     Get.to(HomeScreen());
+              //     controller5.refresh();
+              //     controller4.refresh();
+              //   },
+              // ),
               title: Text("Employé "),
-              automaticallyImplyLeading: false,
+              automaticallyImplyLeading: true,
             ),
             body: Column(
               children: [
@@ -105,7 +107,15 @@ class DeptEmpScreen extends StatelessWidget {
                                                         '${controller4.emplist[index].uid}'
                                                       ]),
                                                     });
+                                                    controller5
+                                                        .emplist[index].empuid
+                                                        .add(controller4
+                                                            .emplist[index]
+                                                            .uid);
+
                                                     controller4.update();
+                                                    controller5.update();
+                                                    controller5.refresh();
                                                   },
                                                   child: Row(
                                                     children: [

@@ -13,6 +13,8 @@ class DepartementController extends GetxController {
   @override
   void onInit() async {
     try {
+      print("sheeeeeeeeesh");
+
       QuerySnapshot emps = await FirebaseFirestore.instance
           .collection('departement')
           .orderBy('name')
@@ -22,10 +24,10 @@ class DepartementController extends GetxController {
         em.name = emp['name'];
         em.uid = emp['uid'];
         em.empuid = emp['empuid'];
-        print(em.empuid.length);
+        //print(em.empuid.length);
         emplist.add(em);
         update();
-        // refresh();
+        refresh();
       }
     } catch (e) {
       Get.snackbar('error', '${e.toString()}');

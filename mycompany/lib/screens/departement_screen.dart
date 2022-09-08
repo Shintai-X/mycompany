@@ -7,6 +7,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:mycompany/controllers/departement_controller.dart';
 import 'package:mycompany/controllers/employee_controller.dart';
+import 'package:mycompany/controllers/test_controller.dart';
 import 'package:mycompany/model/departement_model.dart';
 import 'package:mycompany/screens/dep_emp_screen.dart';
 import 'package:mycompany/screens/dept_user_screen.dart';
@@ -16,11 +17,21 @@ import 'package:mycompany/screens/employee_update.dart';
 import 'package:mycompany/screens/home_screen.dart';
 import 'package:uuid/uuid.dart';
 
-class DepartementScreen extends StatelessWidget {
+class DepartementScreen extends StatefulWidget {
   DepartementScreen({Key? key}) : super(key: key);
+
+  @override
+  State<DepartementScreen> createState() => _DepartementScreenState();
+}
+
+class _DepartementScreenState extends State<DepartementScreen> {
   final nameEC = TextEditingController();
+
   DepartementController controller3 = Get.put(DepartementController());
+
   EmployeeController controller4 = Get.put(EmployeeController());
+  TestController controller5 = Get.put(TestController());
+
   @override
   Widget build(BuildContext context) {
     double width_var = MediaQuery.of(context).size.width;
@@ -221,12 +232,12 @@ class DepartementScreen extends StatelessWidget {
                                               child: Card(
                                                 child: InkWell(
                                                   onTap: () {
+                                                    //controller3.onInit();
+                                                    controller5.Pfiou();
                                                     Get.to(TwoDeptEmpScreen(
                                                         controller3
                                                             .emplist[index].uid,
                                                         index));
-                                                    controller3.update();
-                                                    controller4.update();
 
                                                     print("test");
                                                   },
@@ -339,8 +350,10 @@ class DepartementScreen extends StatelessWidget {
         .doc(em.uid)
         .set(em.toMap());
     controller3.emplist.add(em);
+    //controller3.update();
     controller3.refresh();
-    controller3.update();
+    //controller4.update();
+    controller4.refresh();
     nameEC.text = '';
   }
 }

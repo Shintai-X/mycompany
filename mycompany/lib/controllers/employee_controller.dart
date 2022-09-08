@@ -31,7 +31,6 @@ class EmployeeController extends GetxController {
         em.email = emp['email'];
         em.number = emp['number'];
         emplist.add(em);
-
         update();
         refresh();
       }
@@ -40,9 +39,16 @@ class EmployeeController extends GetxController {
     }
   }
 
-  Future<DocumentReference<Map<String, dynamic>>> GetEmp(String value) async {
-    var cur_emp =
-        await FirebaseFirestore.instance.collection('employees').doc(value);
-    return cur_emp;
+  Future<EmployeeModel> GetEmp(String Euid) async {
+    EmployeeModel emp = EmployeeModel();
+    var emp2 = await FirebaseFirestore.instance
+        .collection('employees')
+        .doc(Euid)
+        .get()
+        .obs;
+    emp = emp2 as EmployeeModel;
+    update();
+
+    return emp;
   }
 }

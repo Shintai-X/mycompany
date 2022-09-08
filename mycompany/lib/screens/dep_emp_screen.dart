@@ -8,6 +8,8 @@ import 'package:get/get.dart';
 import 'package:mycompany/controllers/departement_controller.dart';
 import 'package:mycompany/controllers/deptemp_controller.dart';
 import 'package:mycompany/controllers/employee_controller.dart';
+import 'package:mycompany/controllers/test_controller.dart';
+import 'package:mycompany/model/employee_model.dart';
 import 'package:mycompany/screens/employee_gestion.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mycompany/screens/employee_update.dart';
@@ -19,15 +21,18 @@ class TwoDeptEmpScreen extends StatelessWidget {
   final int? index2;
   TwoDeptEmpScreen(this.depuid, this.index2, {super.key});
   EmployeeController controller4 = Get.put(EmployeeController());
-  DepartementController controller9 = Get.put(DepartementController());
+  TestController controller9 = Get.put(TestController());
 
   @override
   Widget build(BuildContext context) {
     double width_var = MediaQuery.of(context).size.width;
     double height_var = MediaQuery.of(context).size.height;
-    return GetBuilder<DepartementController>(
-        init: DepartementController(),
+
+    return GetBuilder(
+        init: TestController(),
         builder: (controller) {
+          print("I GET REBUILD KNOW");
+          // controller9.Pfiou();
           return Scaffold(
             appBar: AppBar(
               // leading: IconButton(
@@ -94,28 +99,28 @@ class TwoDeptEmpScreen extends StatelessWidget {
                                                               width_var * 0.34,
                                                           height:
                                                               height_var * 0.18,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        16.0),
-                                                            image:
-                                                                DecorationImage(
-                                                              fit: BoxFit.cover,
-                                                              image: controller4
-                                                                          .emplist[
-                                                                              index]
-                                                                          .img ==
-                                                                      null
-                                                                  ? AssetImage(
-                                                                      "assets/noir.jpg")
-                                                                  : FileImage(File(controller4
-                                                                      .emplist[
-                                                                          index]
-                                                                      .img!)) as ImageProvider,
-                                                            ),
-                                                          ),
+                                                          // decoration:
+                                                          //     BoxDecoration(
+                                                          //   borderRadius:
+                                                          //       BorderRadius
+                                                          //           .circular(
+                                                          //               16.0),
+                                                          //   image:
+                                                          //       DecorationImage(
+                                                          //     fit: BoxFit.cover,
+                                                          //     image: controller4
+                                                          //                 .emplist[
+                                                          //                     index]
+                                                          //                 .img ==
+                                                          //             null
+                                                          //         ? AssetImage(
+                                                          //             "assets/noir.jpg")
+                                                          //         : FileImage(File(controller4
+                                                          //             .emplist[
+                                                          //                 index]
+                                                          //             .img!)) as ImageProvider,
+                                                          //   ),
+                                                          // ),
                                                         ),
                                                       ),
                                                       Column(
@@ -124,14 +129,14 @@ class TwoDeptEmpScreen extends StatelessWidget {
                                                                 .center,
                                                         children: [
                                                           Text(
-                                                            "${controller9.emplist[index2 as int].empuid[index]} ",
+                                                            "${controller4.GetEmp(controller9.emplist[index2 as int].empuid[index])} ",
                                                             style: TextStyle(
                                                               color:
                                                                   Colors.blue,
                                                               fontWeight:
                                                                   FontWeight
                                                                       .bold,
-                                                              fontSize: 20,
+                                                              fontSize: 10,
                                                             ),
                                                           ),
                                                         ],
