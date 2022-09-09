@@ -22,6 +22,7 @@ class TwoDeptEmpScreen extends StatelessWidget {
   TwoDeptEmpScreen(this.depuid, this.index2, {super.key});
   EmployeeController controller4 = Get.put(EmployeeController());
   TestController controller9 = Get.put(TestController());
+  DepartementController controller8 = Get.put(DepartementController());
 
   @override
   Widget build(BuildContext context) {
@@ -85,59 +86,205 @@ class TwoDeptEmpScreen extends StatelessWidget {
                                               background: Container(
                                                 color: Colors.red,
                                               ),
-                                              onDismissed: (direction) {},
+                                              onDismissed: (direction) async {
+                                                await FirebaseFirestore.instance
+                                                    .collection('departement')
+                                                    .doc(controller8
+                                                        .emplist[index2 as int]
+                                                        .empuid[index])
+                                                    .delete();
+
+                                                // controller9
+                                                //     .emplist[index2 as int]
+                                                //     .empuid
+                                                //     .removeAt(index);
+
+                                                //await doc.delete();
+                                                controller9.update();
+
+                                                controller9.refresh();
+                                              },
                                               child: Card(
                                                 child: InkWell(
                                                   onTap: () {},
                                                   child: Row(
                                                     children: [
-                                                      SizedBox(
-                                                        height: 80,
-                                                        width: width_var * 0.20,
-                                                        child: Container(
-                                                          width:
-                                                              width_var * 0.34,
-                                                          height:
-                                                              height_var * 0.18,
-                                                          // decoration:
-                                                          //     BoxDecoration(
-                                                          //   borderRadius:
-                                                          //       BorderRadius
-                                                          //           .circular(
-                                                          //               16.0),
-                                                          //   image:
-                                                          //       DecorationImage(
-                                                          //     fit: BoxFit.cover,
-                                                          //     image: controller4
-                                                          //                 .emplist[
-                                                          //                     index]
-                                                          //                 .img ==
-                                                          //             null
-                                                          //         ? AssetImage(
-                                                          //             "assets/noir.jpg")
-                                                          //         : FileImage(File(controller4
-                                                          //             .emplist[
-                                                          //                 index]
-                                                          //             .img!)) as ImageProvider,
-                                                          //   ),
-                                                          // ),
-                                                        ),
+                                                      FutureBuilder(
+                                                        future: controller4
+                                                            .GetImg(controller9
+                                                                .emplist[index2
+                                                                    as int]
+                                                                .empuid[index]),
+                                                        builder: (BuildContext
+                                                                context,
+                                                            AsyncSnapshot<
+                                                                    dynamic>
+                                                                snapshot) {
+                                                          List<Widget> children;
+
+                                                          if (snapshot
+                                                              .hasData) {
+                                                            children = <Widget>[
+                                                              SizedBox(
+                                                                height: 80,
+                                                                width:
+                                                                    width_var *
+                                                                        0.20,
+                                                                child:
+                                                                    Container(
+                                                                  width:
+                                                                      width_var *
+                                                                          0.34,
+                                                                  height:
+                                                                      height_var *
+                                                                          0.18,
+                                                                  decoration:
+                                                                      BoxDecoration(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            16.0),
+                                                                    image:
+                                                                        DecorationImage(
+                                                                      fit: BoxFit
+                                                                          .cover,
+                                                                      image: FileImage(
+                                                                              File(snapshot.data))
+                                                                          as ImageProvider,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ];
+                                                          } else if (snapshot
+                                                              .hasError) {
+                                                            children = <Widget>[
+                                                              Text(
+                                                                " erreur",
+                                                                style:
+                                                                    TextStyle(
+                                                                  color: Colors
+                                                                      .blue,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  fontSize: 10,
+                                                                ),
+                                                              ),
+                                                            ];
+                                                          } else {
+                                                            children =
+                                                                const <Widget>[
+                                                              SizedBox(
+                                                                width: 60,
+                                                                height: 60,
+                                                                child:
+                                                                    CircularProgressIndicator(),
+                                                              ),
+                                                              Padding(
+                                                                padding: EdgeInsets
+                                                                    .only(
+                                                                        top:
+                                                                            16),
+                                                                child: Text(
+                                                                    'Awaiting result...'),
+                                                              ),
+                                                            ];
+                                                          }
+                                                          return Center(
+                                                            child: Column(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                              children:
+                                                                  children,
+                                                            ),
+                                                          );
+                                                        },
                                                       ),
                                                       Column(
                                                         mainAxisAlignment:
                                                             MainAxisAlignment
                                                                 .center,
                                                         children: [
-                                                          Text(
-                                                            "${controller4.GetEmp(controller9.emplist[index2 as int].empuid[index])} ",
-                                                            style: TextStyle(
-                                                              color:
-                                                                  Colors.blue,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                              fontSize: 10,
-                                                            ),
+                                                          FutureBuilder(
+                                                            future: controller4
+                                                                .GetEmp(controller9
+                                                                    .emplist[index2
+                                                                        as int]
+                                                                    .empuid[index]),
+                                                            builder: (BuildContext
+                                                                    context,
+                                                                AsyncSnapshot<
+                                                                        dynamic>
+                                                                    snapshot) {
+                                                              List<Widget>
+                                                                  children;
+                                                              if (snapshot
+                                                                  .hasData) {
+                                                                children =
+                                                                    <Widget>[
+                                                                  Text(
+                                                                    " ${snapshot.data}",
+                                                                    style:
+                                                                        TextStyle(
+                                                                      color: Colors
+                                                                          .black,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                      fontSize:
+                                                                          20,
+                                                                    ),
+                                                                  ),
+                                                                ];
+                                                              } else if (snapshot
+                                                                  .hasError) {
+                                                                children =
+                                                                    <Widget>[
+                                                                  Text(
+                                                                    " erreur",
+                                                                    style:
+                                                                        TextStyle(
+                                                                      color: Colors
+                                                                          .blue,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                      fontSize:
+                                                                          10,
+                                                                    ),
+                                                                  ),
+                                                                ];
+                                                              } else {
+                                                                children =
+                                                                    const <
+                                                                        Widget>[
+                                                                  SizedBox(
+                                                                    width: 60,
+                                                                    height: 60,
+                                                                    child:
+                                                                        CircularProgressIndicator(),
+                                                                  ),
+                                                                  Padding(
+                                                                    padding: EdgeInsets
+                                                                        .only(
+                                                                            top:
+                                                                                16),
+                                                                    child: Text(
+                                                                        'Awaiting result...'),
+                                                                  ),
+                                                                ];
+                                                              }
+                                                              return Center(
+                                                                child: Column(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .center,
+                                                                  children:
+                                                                      children,
+                                                                ),
+                                                              );
+                                                            },
                                                           ),
                                                         ],
                                                       ),

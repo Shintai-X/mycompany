@@ -112,10 +112,12 @@ class DeptEmpScreen extends StatelessWidget {
                                                         .add(controller4
                                                             .emplist[index]
                                                             .uid);
-
+                                                    controller4.emplist
+                                                        .removeAt(index);
                                                     controller4.update();
                                                     controller5.update();
                                                     controller5.refresh();
+                                                    Get.back();
                                                   },
                                                   child: Row(
                                                     children: [

@@ -38,6 +38,7 @@ class AgenceModel {
       dept: map['dept'],
       img: map['img'],
       date: map['date'],
+      numero: map['numero'],
     );
   }
 
@@ -54,6 +55,7 @@ class AgenceModel {
       'dept': dept,
       'img': img,
       'date': date,
+      'numero': numero,
     };
   }
 }

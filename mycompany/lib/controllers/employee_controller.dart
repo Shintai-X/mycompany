@@ -5,7 +5,7 @@ import 'package:mycompany/model/employee_model.dart';
 
 class EmployeeController extends GetxController {
   var emplist = <EmployeeModel>[];
-
+  EmployeeModel empX = EmployeeModel();
   String? uid;
   String? firstname;
   String? lastname;
@@ -34,21 +34,55 @@ class EmployeeController extends GetxController {
         update();
         refresh();
       }
+
+      update();
     } catch (e) {
       Get.snackbar('error', '${e.toString()}');
     }
   }
 
-  Future<EmployeeModel> GetEmp(String Euid) async {
-    EmployeeModel emp = EmployeeModel();
+  Future<String?> GetEmp(String Euidd) async {
+    var emp2 = await FirebaseFirestore.instance
+        .collection('employees')
+        .doc(Euidd)
+        .get();
+    empX.firstname = emp2['firstname'];
+    empX.lastname = emp2['lastname'];
+    empX.img = emp2['img'];
+    update();
+    print('hey ${empX.firstname}');
+    String? expre = '${empX.firstname} ${empX.lastname}';
+    return expre;
+  }
+
+  Future<String?> GetXmp(String Euid) async {
     var emp2 = await FirebaseFirestore.instance
         .collection('employees')
         .doc(Euid)
-        .get()
-        .obs;
-    emp = emp2 as EmployeeModel;
+        .get();
+    empX.uid = emp2['uid'];
+    String? exp = empX.uid;
     update();
 
-    return emp;
+    return exp;
+  }
+
+  Future<String?> GetImg(String Euid) async {
+    var emp2 = await FirebaseFirestore.instance
+        .collection('employees')
+        .doc(Euid)
+        .get();
+    update();
+    empX.img = emp2['img'];
+    return empX.img;
+  }
+
+  Future<void> Del(String Euid) async {
+    var emp2 = await FirebaseFirestore.instance
+        .collection('employees')
+        .doc(Euid)
+        .delete();
+
+    update();
   }
 }

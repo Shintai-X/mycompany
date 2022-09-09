@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
+import 'package:mycompany/controllers/agence_controller.dart';
 import 'package:mycompany/controllers/departement_controller.dart';
 import 'package:mycompany/controllers/employee_controller.dart';
 import 'package:mycompany/controllers/test_controller.dart';
@@ -17,20 +18,16 @@ import 'package:mycompany/screens/employee_update.dart';
 import 'package:mycompany/screens/home_screen.dart';
 import 'package:uuid/uuid.dart';
 
-class DepartementScreen extends StatefulWidget {
-  DepartementScreen({Key? key}) : super(key: key);
+class DepartementScreen extends StatelessWidget {
+  final int? inde;
+  final String? auid;
+  DepartementScreen(this.inde, this.auid);
 
-  @override
-  State<DepartementScreen> createState() => _DepartementScreenState();
-}
-
-class _DepartementScreenState extends State<DepartementScreen> {
   final nameEC = TextEditingController();
-
   DepartementController controller3 = Get.put(DepartementController());
-
   EmployeeController controller4 = Get.put(EmployeeController());
   TestController controller5 = Get.put(TestController());
+  AgenceController controller6 = Get.put(AgenceController());
 
   @override
   Widget build(BuildContext context) {
@@ -164,10 +161,7 @@ class _DepartementScreenState extends State<DepartementScreen> {
                                                       width: width_var * 0.1,
                                                     ),
                                                     ElevatedButton(
-                                                      onPressed: () {
-                                                        Get.to(
-                                                            DepartementScreen());
-                                                      },
+                                                      onPressed: () {},
                                                       style: ElevatedButton.styleFrom(
                                                           primary: Colors.grey,
                                                           padding: EdgeInsets
@@ -232,13 +226,35 @@ class _DepartementScreenState extends State<DepartementScreen> {
                                               child: Card(
                                                 child: InkWell(
                                                   onTap: () {
-                                                    //controller3.onInit();
-                                                    controller5.Pfiou();
-                                                    Get.to(TwoDeptEmpScreen(
-                                                        controller3
-                                                            .emplist[index].uid,
-                                                        index));
+                                                    print('hna ${auid}');
+                                                    final docUser =
+                                                        FirebaseFirestore
+                                                            .instance
+                                                            .collection(
+                                                                'agence')
+                                                            .doc(auid);
 
+                                                    docUser.update({
+                                                      'dept': FieldValue
+                                                          .arrayUnion([
+                                                        controller3
+                                                            .emplist[index].uid
+                                                      ]),
+                                                    });
+                                                    controller6
+                                                        .aglist[index].dept
+                                                        .add('haha');
+
+                                                    controller3.emplist
+                                                        .removeAt(index);
+                                                    // controller5.Pfiou();
+                                                    // Get.to(TwoDeptEmpScreen(
+                                                    //     controller3
+                                                    //         .emplist[index].uid,
+                                                    //     index));
+                                                    controller3.refresh();
+                                                    controller6.update();
+                                                    controller6.refresh();
                                                     print("test");
                                                   },
                                                   child: Row(

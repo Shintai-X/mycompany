@@ -1,6 +1,5 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -9,9 +8,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:mycompany/controllers/agence_controller.dart';
 import 'package:mycompany/controllers/user_controller.dart';
+import 'package:mycompany/model/agence_model.dart';
 import 'package:mycompany/model/user_model.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:uuid/uuid.dart';
 
 import 'home_screen.dart';
 import 'login_screen.dart';
@@ -21,7 +23,7 @@ class AgenceAddScreen extends StatelessWidget {
   File? pickedFile;
   ImagePicker imagePicker = ImagePicker();
   final _formkey = GlobalKey<FormState>();
-  var ispwdhidden = true.obs;
+  //var ispwdhidden = true.obs;
   final nameEC = TextEditingController();
   final sizeEC = TextEditingController();
   final domaineEC = TextEditingController();
@@ -29,6 +31,8 @@ class AgenceAddScreen extends StatelessWidget {
   final numberEC = TextEditingController();
   final adresseEc = TextEditingController();
   final descriptionEc = TextEditingController();
+  final dateEc = TextEditingController();
+  AgenceController controller2 = Get.put(AgenceController());
   FirebaseAuth _auth = FirebaseAuth.instance;
   String? errorMessage;
 
@@ -36,9 +40,9 @@ class AgenceAddScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     double width_var = MediaQuery.of(context).size.width;
     double height_var = MediaQuery.of(context).size.height;
-    return GetBuilder<UserController>(
-        init: UserController(),
-        builder: (controller) {
+    return GetBuilder<AgenceController>(
+        init: AgenceController(),
+        builder: (controller2) {
           return SafeArea(
             child: Scaffold(
               appBar: AppBar(
@@ -112,6 +116,7 @@ class AgenceAddScreen extends StatelessWidget {
                               SizedBox(
                                 width: width_var * 0.46,
                                 child: TextFormField(
+                                  controller: nameEC,
                                   validator: (value) {
                                     RegExp regex = new RegExp(r'[A-Za-z]');
                                     if (value!.isEmpty) {
@@ -136,6 +141,7 @@ class AgenceAddScreen extends StatelessWidget {
                               SizedBox(
                                 width: width_var * 0.46,
                                 child: TextFormField(
+                                  controller: sizeEC,
                                   validator: (value) {
                                     RegExp regex = new RegExp(r'[A-Za-z]');
                                     if (value!.isEmpty) {
@@ -167,6 +173,7 @@ class AgenceAddScreen extends StatelessWidget {
                               SizedBox(
                                 width: width_var * 0.46,
                                 child: TextFormField(
+                                  controller: domaineEC,
                                   validator: (value) {
                                     RegExp regex = new RegExp(r'[A-Za-z]');
                                     if (value!.isEmpty) {
@@ -191,6 +198,7 @@ class AgenceAddScreen extends StatelessWidget {
                               SizedBox(
                                 width: width_var * 0.46,
                                 child: TextFormField(
+                                  controller: dateEc,
                                   validator: (value) {
                                     RegExp regex = new RegExp(r'[A-Za-z]');
                                     if (value!.isEmpty) {
@@ -222,6 +230,7 @@ class AgenceAddScreen extends StatelessWidget {
                               SizedBox(
                                 width: width_var * 0.46,
                                 child: TextFormField(
+                                  controller: mailEC,
                                   validator: (value) {
                                     RegExp regex = new RegExp(r'[A-Za-z]');
                                     if (value!.isEmpty) {
@@ -246,6 +255,7 @@ class AgenceAddScreen extends StatelessWidget {
                               SizedBox(
                                 width: width_var * 0.46,
                                 child: TextFormField(
+                                  controller: numberEC,
                                   validator: (value) {
                                     RegExp regex = new RegExp(r'[A-Za-z]');
                                     if (value!.isEmpty) {
@@ -273,6 +283,7 @@ class AgenceAddScreen extends StatelessWidget {
                             height: height_var * 0.01,
                           ),
                           TextFormField(
+                            controller: adresseEc,
                             validator: (value) {
                               RegExp regex = new RegExp(r'[A-Za-z]');
                               if (value!.isEmpty) {
@@ -297,6 +308,7 @@ class AgenceAddScreen extends StatelessWidget {
                             height: height_var * 0.01,
                           ),
                           TextFormField(
+                            controller: descriptionEc,
                             validator: (value) {
                               RegExp regex = new RegExp(r'[A-Za-z]');
                               if (value!.isEmpty) {
@@ -324,7 +336,9 @@ class AgenceAddScreen extends StatelessWidget {
                             height: height_var * 0.07,
                           ),
                           ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Add();
+                            },
                             style: ElevatedButton.styleFrom(
                                 primary: Colors.lightBlue,
                                 padding: EdgeInsets.symmetric(
@@ -432,13 +446,39 @@ class AgenceAddScreen extends StatelessWidget {
     );
   }
 
-  void takePhoto(ImageSource source) async {
-    // final pickedImage =
-    //     await imagePicker.pickImage(source: source, imageQuality: 100);
+  Future<void> Add() async {
+    if (_formkey.currentState!.validate()) {
+      AgenceModel ag = AgenceModel();
+      FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+      var uuid = Uuid();
+      ag.uid = uuid.v4();
+      ag.nom = nameEC.text;
+      ag.domaine = domaineEC.text;
+      ag.size = mailEC.text;
+      ag.adresse = adresseEc.text;
+      ag.description = descriptionEc.text;
+      ag.numero = numberEC.text;
+      ag.img = controller2.img;
+      ag.email = mailEC.text;
+      ag.date = dateEc.text;
+      ag.dept = [''];
+      await firebaseFirestore.collection("agence").doc(ag.uid).set(ag.toMap());
+      controller2.aglist.add(ag);
+      //Get.to(EmployeeScreen());
 
-    // pickedFile = File(pickedImage!.path);
-    // controller.img = pickedFile!.path;
-    // print("this is the path ${controller.img}");
-    // //print("this is the image path ${pickedFile}");
+      controller2.update();
+      controller2.refresh();
+      Get.to(HomeScreen());
+    }
+  }
+
+  void takePhoto(ImageSource source) async {
+    final pickedImage =
+        await imagePicker.pickImage(source: source, imageQuality: 100);
+
+    pickedFile = File(pickedImage!.path);
+    controller2.img = pickedFile!.path;
+    print("this is the path ${controller2.img}");
+    //print("this is the image path ${pickedFile}");
   }
 }
